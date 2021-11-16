@@ -5,13 +5,14 @@ import sys
 cmd = sys.executable
 
 # The filename of the image you want to stipple goes here.
-ORIGINAL_IMAGE = "images/smileyface-inverted.png"
+ORIGINAL_IMAGE = "images/logo.png"
 
 # Enables saving of images.
 SAVE_IMAGE = True
 
 # Total number of points to stipple your image with
-NUMBER_OF_POINTS = 1024
+n = int(input('quantidade de pontos: '))
+NUMBER_OF_POINTS = n
 
 # Number of iterations for the algorithm to evenly spread out all the points. Increase if it looks like all the points haven't 'settled' after the last few iterations.
 NUMBER_OF_ITERATIONS = 25
@@ -29,7 +30,7 @@ THRESHOLD = 255
 FORCE = True
 
 # Display a diagram that shows each iteration of the algorithm, showing the points being arranged into their positions.
-INTERACTIVE = True
+INTERACTIVE = False
 
 # Displays the plot of the final iteration. Usually disabled if INTERACTIVE = True, since the diagram will also show the final iteration.  
 DISPLAY_FINAL_ITERATION = False
