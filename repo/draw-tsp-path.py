@@ -7,10 +7,11 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 from PIL import Image, ImageDraw
 import os
+import sys
 
 # Change these file names to the relevant files.
-ORIGINAL_IMAGE = "images/smileyface-inverted.png"
-IMAGE_TSP = "images/smileyface-inverted-1024-stipple.tsp"
+ORIGINAL_IMAGE = "images/logo.png"
+IMAGE_TSP = "images/logo-"+sys.argv[1]+"-stipple.tsp"
 
 def create_data_model():
     """Stores the data for the problem."""
