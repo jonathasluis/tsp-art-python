@@ -11,8 +11,7 @@ ORIGINAL_IMAGE = "images/logo.png"
 SAVE_IMAGE = True
 
 # Total number of points to stipple your image with
-n = int(input('quantidade de pontos: '))
-NUMBER_OF_POINTS = n
+NUMBER_OF_POINTS = int(sys.argv[1])
 
 # Number of iterations for the algorithm to evenly spread out all the points. Increase if it looks like all the points haven't 'settled' after the last few iterations.
 NUMBER_OF_ITERATIONS = 25
