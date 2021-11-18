@@ -10,9 +10,11 @@ import os
 import sys
 
 # Change these file names to the relevant files.
+points = sys.argv[1]
 ORIGINAL_IMAGE = "images/logo.png"
-IMAGE_TSP = "images/logo-"+sys.argv[1]+"-stipple.tsp"
+IMAGE_TSP = "images/logo-"+points+"-stipple.tsp"
 
+# Cria o modelo com as coordenadas
 def create_data_model():
     """Stores the data for the problem."""
     # Extracts coordinates from IMAGE_TSP and puts them into an array
@@ -30,6 +32,7 @@ def create_data_model():
     data['depot'] = 0
     return data
 
+# Calcula a distancia euclidiana entre os pontos
 def compute_euclidean_distance_matrix(locations):
     """Creates callback to return distance between points."""
     distances = {}
@@ -45,6 +48,7 @@ def compute_euclidean_distance_matrix(locations):
                                (from_node[1] - to_node[1]))))
     return distances
 
+# ortools
 def print_solution(manager, routing, solution):
     """Prints solution on console."""
     print('Objective: {}'.format(solution.ObjectiveValue()))
@@ -60,6 +64,7 @@ def print_solution(manager, routing, solution):
     print(plan_output)
     plan_output += 'Objective: {}m\n'.format(route_distance)
 
+# ortools
 def get_routes(solution, routing, manager):
     """Get vehicle routes from a solution and store them in an array."""
     # Get vehicle routes and store them in a two dimensional array whose
@@ -74,6 +79,7 @@ def get_routes(solution, routing, manager):
       routes.append(route)
     return routes[0]
 
+# desenha as rotas, gera a arte
 def draw_routes(nodes, path):
     """Takes a set of nodes and a path, and outputs an image of the drawn TSP path"""
     tsp_path = []
@@ -92,51 +98,85 @@ def draw_routes(nodes, path):
     tsp_image.save(FINAL_IMAGE)
     print("TSP solution has been drawn and can be viewed at", FINAL_IMAGE)
 
+# Vizinho mais proximo
+def nn_tsp(distance):
+    """Start the tour at the first city; at each step extend the tour 
+    by moving from the previous city to its nearest neighbor 
+    that has not yet been visited."""
+    tour = [0]
+
+    while len(tour) < int(points):
+        A = tour[-1]
+        C = min(distance[A], key=distance[A].get)
+
+        while C in tour:
+            del distance[A][C]
+            C = min(distance[A], key=distance[A].get)
+
+        print(C)
+        tour.append(C)
+    
+    tour.append(0)
+    return tour
+
 def main():
+
+    op = sys.argv[2]
+
     """Entry point of the program."""
     # Instantiate the data problem.
     print("Step 1/5: Initialising variables")
     data = create_data_model()
 
     # Create the routing index manager.
-    manager = pywrapcp.RoutingIndexManager(len(data['locations']),
+    if op == 1:
+        manager = pywrapcp.RoutingIndexManager(len(data['locations']),
                                            data['num_vehicles'], data['depot'])
 
-    # Create Routing Model.
-    routing = pywrapcp.RoutingModel(manager)
+        # Create Routing Model.
+        routing = pywrapcp.RoutingModel(manager)
+
     print("Step 2/5: Computing distance matrix")
     distance_matrix = compute_euclidean_distance_matrix(data['locations'])
 
-    def distance_callback(from_index, to_index):
-        """Returns the distance between the two nodes."""
-        # Convert from routing variable Index to distance matrix NodeIndex.
-        from_node = manager.IndexToNode(from_index)
-        to_node = manager.IndexToNode(to_index)
-        return distance_matrix[from_node][to_node]
+    if op == 1:
+        def distance_callback(from_index, to_index):
+            """Returns the distance between the two nodes."""
+            # Convert from routing variable Index to distance matrix NodeIndex.
+            from_node = manager.IndexToNode(from_index)
+            to_node = manager.IndexToNode(to_index)
+            return distance_matrix[from_node][to_node]
 
-    transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+        transit_callback_index = routing.RegisterTransitCallback(distance_callback)
 
-    # Define cost of each arc.
-    routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+        # Define cost of each arc.
+        routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
-    # Setting first solution heuristic.
-    print("Step 3/5: Setting an initial solution")
-    search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    search_parameters.first_solution_strategy = (
-        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+        # Setting first solution heuristic.
+        print("Step 3/5: Setting an initial solution")
+        search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+        search_parameters.first_solution_strategy = (
+            routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
 
-    # Solve the problem.
-    print("Step 4/5: Solving")
-    solution = routing.SolveWithParameters(search_parameters)
+        # Solve the problem.
+        print("Step 4/5: Solving")
+        solution = routing.SolveWithParameters(search_parameters)
 
-    # Print solution on console.
-    if solution:
-        #print_solution(manager, routing, solution)
-        print("Step 5/5: Drawing the solution")
-        routes = get_routes(solution, routing, manager)
+        # Print solution on console.
+        if solution:
+            #print_solution(manager, routing, solution)
+            print("Step 5/5: Drawing the solution")
+            routes = get_routes(solution, routing, manager)
+            draw_routes(data['locations'],routes)
+        else:
+            print("A solution couldn't be found :(")
+
+    if op == 2:
+        print("Step 3/4: Solving")
+        routes = nn_tsp(distance_matrix)
+
+        print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
-    else:
-        print("A solution couldn't be found :(")
     
 
 if __name__ == '__main__':
