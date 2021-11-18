@@ -100,23 +100,25 @@ def draw_routes(nodes, path):
 
 # Vizinho mais proximo
 def nn_tsp(distance):
-    """Start the tour at the first city; at each step extend the tour 
-    by moving from the previous city to its nearest neighbor 
-    that has not yet been visited."""
-    tour = [0]
-
+    # ponto inicial
+    tour = [0] 
+    
+    # enquanto o tamanho do caminho for menor que a quantidade de pontos
     while len(tour) < int(points):
-        A = tour[-1]
-        C = min(distance[A], key=distance[A].get)
-
+        
+        A = tour[-1]  # Ultima posiçao de tour
+        
+        C = min(distance[A], key=distance[A].get) # Na matriz de distancia, calcula o ponto mais proximo de A
+        
+        # Enquanto C estiver em tour, remove-se C da matriz e calcula o ponto mais proximo
         while C in tour:
             del distance[A][C]
             C = min(distance[A], key=distance[A].get)
 
         #print(C)
-        tour.append(C)
+        tour.append(C) # Adiciona o ponto mais proximo no caminho
     
-    tour.append(0)
+    tour.append(0) # adiciona o ponto inicial para fechar o ciclo
     return tour
 
 def main():
