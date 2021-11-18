@@ -113,7 +113,7 @@ def nn_tsp(distance):
             del distance[A][C]
             C = min(distance[A], key=distance[A].get)
 
-        print(C)
+        #print(C)
         tour.append(C)
     
     tour.append(0)
@@ -121,7 +121,7 @@ def nn_tsp(distance):
 
 def main():
 
-    op = sys.argv[2]
+    op = int(sys.argv[2])
 
     """Entry point of the program."""
     # Instantiate the data problem.
