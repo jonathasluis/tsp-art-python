@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 import os
 import sys
 import algGenetico
+import copy
 
 
 # Change these file names to the relevant files.
@@ -185,7 +186,9 @@ def main():
     if op == 3:
         print("Step 3/4: Solving")
 
-        ag = algGenetico.AG(int(points) ,50,distance_matrix)
+        rotaBase = nn_tsp(copy.deepcopy( distance_matrix))
+        ag = algGenetico.AG(int(points) ,50,distance_matrix,rotaBase)
+
         routes = ag.gerarCaminho()
         print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
