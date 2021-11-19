@@ -181,11 +181,11 @@ def main():
 
         print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
-     if op == 3:
+
+    if op == 3:
         print("Step 3/4: Solving")
 
         ag = algGenetico.AG(int(points) ,50,distance_matrix)
-
         routes = ag.gerarCaminho()
         print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
