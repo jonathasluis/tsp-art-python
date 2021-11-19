@@ -13,7 +13,7 @@ import algGenetico
 
 # Change these file names to the relevant files.
 points = sys.argv[1]
-ORIGINAL_IMAGE = "images/logo.png"
+ORIGINAL_IMAGE = "images/logo.jpg"
 IMAGE_TSP = "images/logo-"+points+"-stipple.tsp"
 
 # Cria o modelo com as coordenadas
