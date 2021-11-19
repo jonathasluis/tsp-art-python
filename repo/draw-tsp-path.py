@@ -8,6 +8,8 @@ from ortools.constraint_solver import pywrapcp
 from PIL import Image, ImageDraw
 import os
 import sys
+import algGenetico
+
 
 # Change these file names to the relevant files.
 points = sys.argv[1]
@@ -179,7 +181,14 @@ def main():
 
         print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
-    
+     if op == 3:
+        print("Step 3/4: Solving")
+
+        ag = algGenetico.AG(int(points) ,50,distance_matrix)
+
+        routes = ag.gerarCaminho()
+        print("Step 4/4: Drawing the solution")
+        draw_routes(data['locations'],routes)
 
 if __name__ == '__main__':
     main()
