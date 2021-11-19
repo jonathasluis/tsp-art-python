@@ -29,6 +29,7 @@ class Cromossomo:
             totalDist += matrixDist[qtdVertices - 1][0] #fecha o ciclo indo do ultimo ponto ao primeiro
 
             self.distPercorrida = totalDist
+            print(self.distPercorrida)
         return self.distPercorrida
         
     def __lt__(self, outro):
@@ -36,30 +37,33 @@ class Cromossomo:
 
     def mutarCromossomo(self):
         global qtdVertices
-        geneUm = random.randrange(qtdVertices -2)
-        geneDois = random.randrange(geneUm,qtdVertices - 2)  
+        geneUm = random.randrange(qtdVertices - 1)
+        geneDois = random.randrange(qtdVertices - 1)  
         self.caminho[geneUm],self.caminho[geneDois] = self.caminho[geneDois], self.caminho[geneUm]
 
 class  AG:
 
-    def __init__(self,pQtdVertices, tamanhoPopulacao, matrizDist):
+    def __init__(self,pQtdVertices, tamanhoPopulacao, matrizDist,rotaBase):
         global matrixDist
         global qtdVertices
 
         qtdVertices = pQtdVertices
         matrixDist = matrizDist
 
-
-        self.caminhoBase = list(range(qtdVertices))
         self.cromossomos = []
         self.tamPopulacao = tamanhoPopulacao
         self.numTentativas = 0
 
         i = 0
+        mutacoes = qtdVertices // 1000
+        print(mutacoes)
         while i < tamanhoPopulacao:
             cromossomo = Cromossomo()
-            cromossomo.caminho =  self.caminhoBase[:]
-            random.shuffle(cromossomo.caminho)
+            cromossomo.caminho =  rotaBase
+
+            for j in range(mutacoes):
+                cromossomo.mutarCromossomo()
+
             self.cromossomos.append(cromossomo)
             i += 1
 
@@ -121,7 +125,7 @@ class  AG:
             else:
                 self.numTentativas += 1
 
-        return self.numTentativas < 1000
+        return self.numTentativas < 700
 
 
     def gerarCaminho(self):
