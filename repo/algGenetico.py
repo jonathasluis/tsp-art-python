@@ -29,7 +29,7 @@ class Cromossomo:
             totalDist += matrixDist[qtdVertices - 1][0] #fecha o ciclo indo do ultimo ponto ao primeiro
 
             self.distPercorrida = totalDist
-            print(self.distPercorrida)
+            #print(self.distPercorrida)
         return self.distPercorrida
         
     def __lt__(self, outro):
@@ -56,7 +56,7 @@ class  AG:
 
         i = 0
         mutacoes = qtdVertices // 1000
-        print(mutacoes)
+        #print(mutacoes)
         while i < tamanhoPopulacao:
             cromossomo = Cromossomo()
             cromossomo.caminho =  rotaBase

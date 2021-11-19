@@ -124,27 +124,41 @@ def nn_tsp(distance):
     tour.append(0) # adiciona o ponto inicial para fechar o ciclo
     return tour
 
+def sum(tour,distance): # calcula o custo final
+    soma = 0
+
+    for i in enumerate(tour):
+        indice = i[0]
+        atual = i[1]
+
+        if indice < len(tour) - 1:
+            prox = tour[indice+1]
+
+            soma += distance[atual][prox]
+    
+    return soma
+
 def main():
 
     op = int(sys.argv[2])
 
     """Entry point of the program."""
     # Instantiate the data problem.
-    print("Step 1/5: Initialising variables")
-    data = create_data_model()
 
     # Create the routing index manager.
     if op == 1:
+        print("Step 1/5: Initialising variables")
+        data = create_data_model()
+
         manager = pywrapcp.RoutingIndexManager(len(data['locations']),
                                            data['num_vehicles'], data['depot'])
 
         # Create Routing Model.
         routing = pywrapcp.RoutingModel(manager)
 
-    print("Step 2/5: Computing distance matrix")
-    distance_matrix = compute_euclidean_distance_matrix(data['locations'])
+        print("Step 2/5: Computing distance matrix")
+        distance_matrix = compute_euclidean_distance_matrix(data['locations'])
 
-    if op == 1:
         def distance_callback(from_index, to_index):
             """Returns the distance between the two nodes."""
             # Convert from routing variable Index to distance matrix NodeIndex.
@@ -173,17 +187,35 @@ def main():
             print("Step 5/5: Drawing the solution")
             routes = get_routes(solution, routing, manager)
             draw_routes(data['locations'],routes)
+
+            print('custo: ',sum(routes,distance_matrix))
+
         else:
             print("A solution couldn't be found :(")
 
-    if op == 2:
+    elif op == 2:
+        print("Step 1/4: Initialising variables")
+        data = create_data_model()
+
+        print("Step 2/4: Computing distance matrix")
+        distance_matrix = compute_euclidean_distance_matrix(data['locations'])
+
         print("Step 3/4: Solving")
-        routes = nn_tsp(distance_matrix)
+        routes = nn_tsp(distance_matrix.copy())
 
         print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
 
-    if op == 3:
+        print('custo: ',sum(routes,distance_matrix))
+
+    # implementado em algGenetico (organização)
+    elif op == 3:
+        print("Step 1/4: Initialising variables")
+        data = create_data_model()
+
+        print("Step 2/4: Computing distance matrix")
+        distance_matrix = compute_euclidean_distance_matrix(data['locations'])
+
         print("Step 3/4: Solving")
 
         rotaBase = nn_tsp(copy.deepcopy( distance_matrix))
@@ -192,6 +224,8 @@ def main():
         routes = ag.gerarCaminho()
         print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
+
+        print('custo: ',sum(routes,distance_matrix))
 
 if __name__ == '__main__':
     main()
