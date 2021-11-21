@@ -8,8 +8,7 @@ from ortools.constraint_solver import pywrapcp
 from PIL import Image, ImageDraw
 import os
 import sys
-import algGenetico
-import copy
+import algTSP
 
 
 # Change these file names to the relevant files.
@@ -218,10 +217,10 @@ def main():
 
         print("Step 3/4: Solving")
 
-        rotaBase = nn_tsp(copy.deepcopy( distance_matrix))
-        ag = algGenetico.AG(int(points) ,50,distance_matrix,rotaBase)
+       
+        alg = algTSP.AlgTSP(distance_matrix)
 
-        routes = ag.gerarCaminho()
+        routes = alg.gerarCaminho()
         print("Step 4/4: Drawing the solution")
         draw_routes(data['locations'],routes)
 
