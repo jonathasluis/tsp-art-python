@@ -1,3 +1,5 @@
+import math
+
 class AlgTSP:
 
     def __init__(self, pMatrizDist):
@@ -6,12 +8,15 @@ class AlgTSP:
         self.vertices = len(pMatrizDist)
 
     def inserirNoMeio(self,v1,v2, posV):
-        #Recebe dois vertices e tenta inserir entre eles um outro vertice que incurta a distancia entre os vertices v1 e v2
+        #Recebe dois vertices e tenta inserir entre eles um outro vertice que incremente a menor distancia possivel entre os vertices v1 e v2
         
         inseriuNovo = False
         
         melhorSolucao = self.matrizDist[v1][v2]
-   
+
+        if melhorSolucao == -1:
+            melhorSolucao = math.inf
+
         vAdicionado = -1
 
         for v in range(self.vertices):
@@ -33,29 +38,19 @@ class AlgTSP:
         return inseriuNovo
 
     def gerarCaminho(self):
-
-
+        #Inicia o grafo com o vertice 0 e o vertice mais distante dele e apos isso vai inserindo vertices entre eles ate terminar de inserir
         self.caminho.append(0)
-        inicio = 0
-
-        posConsolidado = 0
-        #while( len(self.caminho) < self.vertices ):
-
-        #achouDistante = False
-        #while not achouDistante:
-        vDist = max(self.matrizDist[inicio], key=self.matrizDist[inicio].get)
-                #if vDist in self.caminho:
-                #    del self.matrizDist[inicio][vDist]
-                #else:
-                #    achouDistante = True
-
+           
+        vDist = max(self.matrizDist[0], key=self.matrizDist[0].get)
+              
         self.caminho.append(vDist)
         
         consegueInserir = True
         while consegueInserir:
+
             consegueInserir = False
 
-            i = posConsolidado
+            i = 0
             
             while i < (len(self.caminho) - 1) :
                 v1 = self.caminho[i]
@@ -66,24 +61,8 @@ class AlgTSP:
                 if not consegueInserir and inseriu:
                     consegueInserir = inseriu
                     i = -1
-                    
-
+    
                 i+= 1
 
-            #inicio = self.caminho[-1]
-            #posConsolidado = len(self.caminho) - 1
         self.caminho.append(0)
         return self.caminho
-
-
-
-
-
-
-
-
-
-
-
-
-
