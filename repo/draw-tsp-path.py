@@ -207,7 +207,7 @@ def main():
 
         print('custo: ',sum(routes,distance_matrix))
 
-    # implementado em algGenetico (organização)
+    # implementado em "algTSP.py" (organização)
     elif op == 3:
         print("Step 1/4: Initialising variables")
         data = create_data_model()
