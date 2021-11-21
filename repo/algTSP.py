@@ -58,9 +58,9 @@ class AlgTSP:
 
                 inseriu = self.inserirNoMeio(v1,v2,i + 1)
 
-                if not consegueInserir and inseriu:
+                if  inseriu:
                     consegueInserir = inseriu
-                    i = -1
+                   
     
                 i+= 1
 
